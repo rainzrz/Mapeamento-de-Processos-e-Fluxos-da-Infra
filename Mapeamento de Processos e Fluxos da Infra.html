@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapeamento de Processos e Fluxos da Infraestrutura</title>
+    <style>
+        :root {
+            --purple-dark:   #1a1245;
+            --purple-mid:    #2b1d72;
+            --purple-light:  #4a3aaa;
+            --purple-accent: #6c5ce7;
+            --gold:          #c9a84c;
+            --gold-light:    #e8c96a;
+            --white:         #ffffff;
+            --bg:            #eceaf4;
+            --text:          #1a1a2e;
+            --muted:         #888;
+            --border:        #e4e1f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.55;
+        }
+
+        /* ═══════════════════════════════
+           COVER
+        ═══════════════════════════════ */
+        .cover {
+            background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple-mid) 55%, var(--purple-light) 100%);
+            padding: 64px 72px 56px;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cover::before {
+            content: '';
+            position: absolute;
+            right: -80px; top: -80px;
+            width: 380px; height: 380px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .cover::after {
+            content: '';
+            position: absolute;
+            right: 120px; bottom: -160px;
+            width: 280px; height: 280px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+        }
+
+        .cover-eyebrow {
+            font-size: 0.68em;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: var(--gold);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .cover h1 {
+            font-size: 2.4em;
+            font-weight: 800;
+            line-height: 1.15;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            max-width: 700px;
+        }
+
+        .byline {
+            font-size: 0.3em;
+            font-weight: 600;
+            letter-spacing: 4px;
+            color: var(--gold);
+            text-transform: uppercase;
+            vertical-align: middle;
+            white-space: nowrap;
+            margin-left: 10px;
+            opacity: 0.85;
+        }
+
+        .cover-line {
+            width: 60px;
+            height: 3px;
+            background: var(--gold);
+            margin-bottom: 16px;
+        }
+
+        .cover-company {
+            font-size: 0.85em;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* ═══════════════════════════════
+           LAYOUT
+        ═══════════════════════════════ */
+        .content {
+            padding: 40px 50px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 22px;
+            margin-bottom: 22px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 22px;
+            margin-bottom: 22px;
+        }
+
+        /* ═══════════════════════════════
+           CARDS
+        ═══════════════════════════════ */
+        .card {
+            background: var(--white);
+            box-shadow: 0 3px 16px rgba(26, 18, 69, 0.10);
+            overflow: hidden;
+            margin-bottom: 22px;
+        }
+
+        .card:last-child { margin-bottom: 0; }
+
+        .grid-2 .card,
+        .grid-3 .card { margin-bottom: 0; }
+
+        .card-header {
+            background: var(--purple-dark);
+            color: var(--white);
+            padding: 14px 22px 12px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::after {
+            content: '';
+            position: absolute;
+            right: -30px; top: -30px;
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+            pointer-events: none;
+        }
+
+        .card-num {
+            font-size: 2.4em;
+            font-weight: 900;
+            color: rgba(255,255,255,0.12);
+            line-height: 1;
+            flex-shrink: 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .card-title {
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .card-body {
+            padding: 0;
+        }
+
+        /* ═══════════════════════════════
+           PROCESS LIST
+        ═══════════════════════════════ */
+        .process-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .process-list li {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 10px 14px;
+            align-items: baseline;
+            padding: 11px 22px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.875em;
+        }
+
+        .process-list li:last-child { border-bottom: none; }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--gold);
+            border-radius: 50%;
+            margin-top: 5px;
+            flex-shrink: 0;
+        }
+
+        .item-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .item-name {
+            font-weight: 700;
+            color: var(--text);
+            font-size: 0.95em;
+        }
+
+        .item-desc {
+            color: var(--muted);
+            font-size: 0.9em;
+            line-height: 1.45;
+        }
+
+        /* compact list (for two-column cards with less space) */
+        .compact .process-list li {
+            padding: 9px 18px;
+            font-size: 0.855em;
+        }
+
+        /* ═══════════════════════════════
+           DARK VARIANT
+        ═══════════════════════════════ */
+        .card-dark .card-header {
+            background: var(--purple-light);
+        }
+
+        .card-dark .card-body-inner {
+            background: var(--purple-mid);
+        }
+
+        .card-dark .process-list li {
+            border-bottom-color: rgba(255,255,255,0.08);
+        }
+
+        .card-dark .item-name  { color: var(--white); }
+        .card-dark .item-desc  { color: rgba(255,255,255,0.50); }
+
+        /* ═══════════════════════════════
+           KEYFRAMES
+        ═══════════════════════════════ */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideLeft {
+            from { opacity: 0; transform: translateX(-32px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes expandWidth {
+            from { transform: scaleX(0); transform-origin: left; }
+            to   { transform: scaleX(1); transform-origin: left; }
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { transform: scale(1); }
+            50%       { transform: scale(1.6); }
+        }
+
+        /* ═══════════════════════════════
+           COVER ANIMATIONS
+        ═══════════════════════════════ */
+        .cover {
+            animation: fadeIn 0.7s ease both;
+        }
+
+        .cover-eyebrow {
+            animation: slideLeft 0.6s ease 0.25s both;
+        }
+
+        .cover h1 {
+            animation: slideLeft 0.6s ease 0.45s both;
+        }
+
+        .cover-line {
+            animation: expandWidth 0.5s ease 0.8s both;
+        }
+
+        .cover-company {
+            animation: fadeIn 0.6s ease 1s both;
+        }
+
+        /* ═══════════════════════════════
+           CARD SCROLL REVEAL
+        ═══════════════════════════════ */
+        .card {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.55s ease, transform 0.55s ease,
+                        box-shadow 0.3s ease;
+            scroll-margin-top: 52px;
+        }
+
+        .card.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ═══════════════════════════════
+           CARD HOVER
+        ═══════════════════════════════ */
+        .card.is-visible:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 14px 36px rgba(26, 18, 69, 0.20);
+        }
+
+        .card-header {
+            transition: background 0.3s ease;
+        }
+
+        .card.is-visible:hover .card-header {
+            background: #25196a;
+        }
+
+        .card-dark.is-visible:hover .card-header {
+            background: #5a47c0;
+        }
+
+        .card-num {
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .card.is-visible:hover .card-num {
+            color: rgba(255,255,255,0.28);
+            transform: scale(1.08);
+        }
+
+        /* ═══════════════════════════════
+           LIST ITEM HOVER
+        ═══════════════════════════════ */
+        .process-list li {
+            transition: background 0.2s ease, padding-left 0.22s ease,
+                        border-left 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .process-list li:hover {
+            background: rgba(201, 168, 76, 0.07);
+            padding-left: 26px;
+            border-left-color: var(--gold);
+        }
+
+        .card-dark .process-list li:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-left-color: var(--gold-light);
+        }
+
+        .dot {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .process-list li:hover .dot {
+            transform: scale(1.7);
+            box-shadow: 0 0 6px var(--gold);
+        }
+
+        .item-name {
+            transition: color 0.2s ease;
+        }
+
+        .process-list li:hover .item-name {
+            color: var(--purple-mid);
+        }
+
+        .card-dark .process-list li:hover .item-name {
+            color: #e8c96a;
+        }
+
+        /* ═══════════════════════════════
+           SITE NAV
+        ═══════════════════════════════ */
+        html { scroll-behavior: smooth; }
+
+        .site-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 0;
+            padding: 10px 50px;
+            background: rgba(236, 234, 244, 0.72);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            animation: fadeIn 0.5s ease 1.1s both;
+        }
+
+        .site-nav a {
+            font-size: 0.67em;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: rgba(42, 29, 114, 0.35);
+            text-decoration: none;
+            padding: 3px 9px;
+            white-space: nowrap;
+            transition: color 0.2s ease;
+        }
+
+        .site-nav a:hover,
+        .site-nav a.is-active {
+            color: var(--purple-mid);
+        }
+
+        .nav-sep {
+            color: rgba(42, 29, 114, 0.15);
+            font-size: 0.55em;
+            user-select: none;
+            line-height: 1;
+        }
+
+        /* ═══════════════════════════════
+           PRINT
+        ═══════════════════════════════ */
+        @media print {
+            body { background: white; }
+            .content { padding: 20px 30px; }
+            .card { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+            .cover { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+        }
+
+        @media (max-width: 720px) {
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .content { padding: 24px 18px; }
+            .cover { padding: 40px 28px; }
+            .cover h1 { font-size: 1.6em; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- COVER -->
+    <header class="cover">
+        <p class="cover-eyebrow">Systemhaus Technology Solutions</p>
+        <h1>Mapeamento de Processos e Fluxos da Infraestrutura <span class="byline">by Raian Rodrigues</span></h1>
+        <div class="cover-line"></div>
+        <p class="cover-company">Infraestrutura &amp; Operações</p>
+    </header>
+
+    <nav class="site-nav">
+        <a href="#s01">Chamados</a><span class="nav-sep">·</span>
+        <a href="#s02">Infra</a><span class="nav-sep">·</span>
+        <a href="#s03">Usuários</a><span class="nav-sep">·</span>
+        <a href="#s04">Antara</a><span class="nav-sep">·</span>
+        <a href="#s05">CI/CD</a><span class="nav-sep">·</span>
+        <a href="#s06">Monitoramento</a><span class="nav-sep">·</span>
+        <a href="#s07">Banco de Dados</a><span class="nav-sep">·</span>
+        <a href="#s08">Integrações</a><span class="nav-sep">·</span>
+        <a href="#s09">Automação</a><span class="nav-sep">·</span>
+        <a href="#s10">Compass</a><span class="nav-sep">·</span>
+        <a href="#s11">Docs</a><span class="nav-sep">·</span>
+        <a href="#s12">Onboarding</a><span class="nav-sep">·</span>
+        <a href="#s13">Clientes</a><span class="nav-sep">·</span>
+        <a href="#s14">Segurança</a><span class="nav-sep">·</span>
+        <a href="#s15">Projetos</a>
+    </nav>
+
+    <main class="content">
+
+        <!-- 01 — GESTÃO DE CHAMADOS (full width) -->
+        <div class="card" id="s01">
+            <div class="card-header">
+                <span class="card-num">01</span>
+                <span class="card-title">Gestão de Chamados e Incidentes</span>
+            </div>
+            <div class="card-body">
+                <div class="card-body-inner">
+                    <ul class="process-list">
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Documentação de chamados</span><span class="item-desc">Registro e padronização de chamados abertos pelos clientes</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Análise de chamados</span><span class="item-desc">Diagnóstico e triagem de tickets para priorização e encaminhamento correto</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Análise de problemas</span><span class="item-desc">Investigação estruturada de falhas para identificação de causa raiz</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Troubleshooting</span><span class="item-desc">Diagnóstico e resolução prática de falhas técnicas em ambientes produtivos</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Prevenção e detecção proativa de incidentes</span><span class="item-desc">Identificação antecipada de falhas antes que impactem os clientes</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Gestão e resposta operacional a incidentes</span><span class="item-desc">Coordenação e resolução estruturada de incidentes em ambiente produtivo</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Redução de MTTR</span><span class="item-desc">Otimização do tempo médio de resolução via processos, automações e base de conhecimento</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Análise de performance</span><span class="item-desc">Avaliação do desempenho de sistemas e identificação de gargalos operacionais</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Análise de lentidão</span><span class="item-desc">Investigação de degradação de resposta em ambientes e aplicações de clientes</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Análise de requisitos</span><span class="item-desc">Levantamento e validação de requisitos técnicos para novos processos ou migrações</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Análise de recursos</span><span class="item-desc">Avaliação de consumo de CPU, memória e disco para dimensionamento adequado</span></span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 02 — INFRAESTRUTURA (full width) -->
+        <div class="card card-dark" id="s02">
+            <div class="card-header">
+                <span class="card-num">02</span>
+                <span class="card-title">Infraestrutura e Redes</span>
+            </div>
+            <div class="card-body">
+                <div class="card-body-inner">
+                    <ul class="process-list">
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Modernização de ambientes Linux legados</span><span class="item-desc">Atualização de sistemas antigos para plataformas padronizadas e seguras</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Padronização de plataformas para clientes multinacionais</span><span class="item-desc">Homogeneização de ambientes para garantir consistência entre todos os clientes</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Administração de servidores Linux e Windows</span><span class="item-desc">Gestão e manutenção de servidores físicos e virtuais dos clientes</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Infraestrutura interna Systemhaus</span><span class="item-desc">Manutenção e evolução da infraestrutura própria da empresa</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Ambientes virtualizados e on-premises</span><span class="item-desc">Gestão de VMs e recursos físicos provisionados nos ambientes dos clientes</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Gerenciamento de redes</span><span class="item-desc">Configuração e monitoramento de redes, switches e conectividade</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Configurações de rede</span><span class="item-desc">Ajuste de parâmetros e interfaces de rede em servidores e dispositivos</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Configurações de IP</span><span class="item-desc">Atribuição e reconfiguração de endereços IP estáticos e dinâmicos nos ambientes</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Alteração de Endereço IP/DNS</span><span class="item-desc">Reconfiguração de endereçamento e resolução de nomes em ambientes clientes</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Configurações de firewall</span><span class="item-desc">Gestão de regras e políticas de firewall para controle de tráfego e segurança</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">ClearOS</span><span class="item-desc">Solução de firewall e gateway de rede baseada em Linux para ambientes on-premises</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">VDI</span><span class="item-desc">Ambientes de desktop virtual com acesso VPN isolado por cliente</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Gerenciamento de ativos do parque tecnológico</span><span class="item-desc">Inventário, controle e manutenção de servidores e equipamentos da Systemhaus</span></span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 03 — USUÁRIOS  /  04 — ANTARA  (dois por linha) -->
+        <div class="grid-2">
+            <div class="card compact" id="s03">
+                <div class="card-header">
+                    <span class="card-num">03</span>
+                    <span class="card-title">Gestão de Usuários e Acessos</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <ul class="process-list">
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Criação de usuário</span><span class="item-desc">Provisionamento completo nos sistemas: e-mail, firewall, VPN, credenciais</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Configuração de usuário</span><span class="item-desc">Ajuste de parâmetros, permissões e preferências de acesso por usuário</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Controle de usuário</span><span class="item-desc">Gerenciamento do ciclo de vida, incluindo inativações e trocas de senha</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Acesso ao Mint</span><span class="item-desc">Provisionamento e controle de acesso à plataforma Mint</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Acesso ao Compass</span><span class="item-desc">Provisionamento e controle de acesso ao portal Compass</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Acesso ao CASS</span><span class="item-desc">Provisionamento e controle de acesso ao sistema CASS</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Acesso ao Antara</span><span class="item-desc">Criação e gestão de usuários, perfis e permissões no sistema</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Atualização de certificado digital</span><span class="item-desc">Renovação e instalação de certificados SSL/TLS e A1/A3</span></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card compact card-dark" id="s04">
+                <div class="card-header">
+                    <span class="card-num">04</span>
+                    <span class="card-title">Antara</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <ul class="process-list">
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Instalações Antara</span><span class="item-desc">Configuração inicial em novos ambientes de clientes</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Configuração de envio de e-mail</span><span class="item-desc">Setup de SMTP e parâmetros de notificação por e-mail no Antara</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Ajuste de TimeZone</span><span class="item-desc">Correção de fuso horário que afeta operações e registros no sistema</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Antara indisponível</span><span class="item-desc">Diagnóstico e recuperação de instâncias fora do ar ou com falha crítica</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Administrativo NFe/MDFe</span><span class="item-desc">Suporte à emissão e processamento de notas fiscais eletrônicas</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Integrações Antara</span><span class="item-desc">Configuração e manutenção de integrações com outros sistemas e APIs</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Novas features e expansões</span><span class="item-desc">Participação em instalações de novas funcionalidades como Antara Connect Client e módulos adicionais</span></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 05 — CI/CD  /  06 — MONITORAMENTO  (dois por linha) -->
+        <div class="grid-2">
+            <div class="card compact" id="s05">
+                <div class="card-header">
+                    <span class="card-num">05</span>
+                    <span class="card-title">Conteinerização e CI/CD</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <ul class="process-list">
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Deploy com Docker e Docker Compose</span><span class="item-desc">Gestão de containers e stacks de serviços em ambientes produtivos</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Pipelines CI/CD</span><span class="item-desc">Automação de build, testes e deploy contínuo para entregas frequentes e seguras</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Versionamento de código</span><span class="item-desc">Controle de versão e gestão de branches via Git</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Infraestrutura como Código (IaC)</span><span class="item-desc">Provisionamento e gestão de infraestrutura através de código versionado</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">TeamCity</span><span class="item-desc">Automação de builds e pipelines de integração contínua para ambientes de clientes</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Jenkins</span><span class="item-desc">Ferramenta de deploy contínuo para entrega automatizada em ambientes de clientes</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Updatetool</span><span class="item-desc">Ferramenta interna para deploy e atualização de sistemas nos ambientes dos clientes</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Gestão de containers Docker</span><span class="item-desc">Operação diária de containers: logs, restart, health check e ciclo de vida dos serviços</span></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card compact card-dark" id="s06">
+                <div class="card-header">
+                    <span class="card-num">06</span>
+                    <span class="card-title">Monitoramento e Observabilidade</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <ul class="process-list">
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Dashboards no Grafana</span><span class="item-desc">Criação e manutenção de painéis de visibilidade de sistemas e serviços</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Centralização e análise de logs</span><span class="item-desc">Agregação de logs para troubleshooting eficiente e rastreabilidade</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Análise de logs</span><span class="item-desc">Leitura e interpretação de logs para identificação de causas raiz em incidentes</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Estratégias de alertas</span><span class="item-desc">Definição de thresholds e canais de notificação para eventos críticos</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Monitoramento de performance e recursos</span><span class="item-desc">Acompanhamento contínuo de métricas de infraestrutura e aplicações</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Uptime Kuma</span><span class="item-desc">Monitoramento de disponibilidade de serviços com interface web e alertas em tempo real</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Prometheus</span><span class="item-desc">Coleta e armazenamento de métricas de infraestrutura para análise e alertas baseados em dados</span></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 07 — BANCO DE DADOS (full width) -->
+        <div class="card" id="s07">
+            <div class="card-header">
+                <span class="card-num">07</span>
+                <span class="card-title">Banco de Dados</span>
+            </div>
+            <div class="card-body">
+                <div class="card-body-inner">
+                    <ul class="process-list">
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Administração de PostgreSQL e SQL Server</span><span class="item-desc">Gestão, manutenção e operação de bancos relacionais dos clientes</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Rotina de backups</span><span class="item-desc">Configuração e validação de backups automáticos e políticas de retenção</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Estratégias de recuperação</span><span class="item-desc">Planejamento e execução de restore em cenários de falha ou perda de dados</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Tuning de performance</span><span class="item-desc">Otimização de queries, índices e parâmetros para máxima eficiência do banco</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Garantia de consistência e integridade</span><span class="item-desc">Validação de dados e prevenção de corrupção ou inconsistências entre ambientes</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Refresh PTA para TTA</span><span class="item-desc">Cópia do banco de produção para o ambiente de testes para validações e homologações</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Import PTA para Systemhaus</span><span class="item-desc">Importação de dados produtivos para o ambiente interno da Systemhaus</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Oracle</span><span class="item-desc">Administração e suporte a bancos Oracle em ambientes de clientes que utilizam a plataforma</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Rotina de backup das aplicações Systemhaus</span><span class="item-desc">Backup recorrente de todas as aplicações e dados internos da Systemhaus com validação de integridade</span></span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 08 — INTEGRAÇÕES  /  09 — AUTOMAÇÃO  (dois por linha) -->
+        <div class="grid-2">
+            <div class="card compact card-dark" id="s08">
+                <div class="card-header">
+                    <span class="card-num">08</span>
+                    <span class="card-title">Integrações</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <ul class="process-list">
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Sistemas e Máquinas</span><span class="item-desc">Integração entre aplicações e equipamentos industriais ou periféricos</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Serial</span><span class="item-desc">Configuração de comunicação via porta serial entre máquinas e sistemas</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Banco de dados</span><span class="item-desc">Integração direta entre sistemas via conexão compartilhada a bancos de dados</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Diretórios</span><span class="item-desc">Integração com servidores de diretório e compartilhamentos de rede</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Ajuste de integrações</span><span class="item-desc">Manutenção e parametrização de integrações existentes entre sistemas</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Implementação de integrações</span><span class="item-desc">Desenvolvimento e entrega de novas integrações entre sistemas, máquinas e plataformas dos clientes</span></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card compact" id="s09">
+                <div class="card-header">
+                    <span class="card-num">09</span>
+                    <span class="card-title">Automação</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <ul class="process-list">
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Python, Shell Script e Bash</span><span class="item-desc">Desenvolvimento de scripts para automatizar tarefas operacionais recorrentes</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Fluxos operacionais com IA</span><span class="item-desc">Uso de LLMs para análise, triagem e resolução assistida de incidentes</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">N8N</span><span class="item-desc">Orquestração de automações e fluxos de trabalho via interface visual com integrações nativas</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Rotinas de backup no cron</span><span class="item-desc">Agendamento e execução automática de backups via cron jobs em servidores Linux</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Implementação de novas ferramentas</span><span class="item-desc">Adoção e rollout de ferramentas que melhorem os processos operacionais da Systemhaus</span></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 10 — COMPASS  /  11 — DOCS  /  12 — ONBOARDING  (três por linha) -->
+        <div class="grid-3">
+            <div class="card compact card-dark" id="s10">
+                <div class="card-header">
+                    <span class="card-num">10</span>
+                    <span class="card-title">Compass</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <ul class="process-list">
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Solicitações</span><span class="item-desc">Processamento e acompanhamento de solicitações abertas via portal Compass</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Erros</span><span class="item-desc">Diagnóstico e resolução de erros e falhas reportados na plataforma</span></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card compact" id="s11">
+                <div class="card-header">
+                    <span class="card-num">11</span>
+                    <span class="card-title">Documentação e Conhecimento</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <ul class="process-list">
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Criação de KBs</span><span class="item-desc">Elaboração de artigos de base de conhecimento para problemas recorrentes</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Atualização de TTA</span><span class="item-desc">Manutenção da documentação técnica do ambiente de testes</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Atualização de PTA</span><span class="item-desc">Manutenção da documentação técnica do ambiente de produção</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Documentação com LLMs</span><span class="item-desc">Geração e padronização de documentação técnica assistida por IA</span></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card compact card-dark" id="s12">
+                <div class="card-header">
+                    <span class="card-num">12</span>
+                    <span class="card-title">Onboarding e Capacitação</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <ul class="process-list">
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Treinamentos internos</span><span class="item-desc">Condução de sessões de capacitação técnica para a equipe</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Onboarding de novos membros</span><span class="item-desc">Integração e orientação de novos engenheiros nos processos e ferramentas</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Padronização de processos</span><span class="item-desc">Definição de fluxos e padrões para reduzir o tempo de onboarding</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Mentoria técnica</span><span class="item-desc">Acompanhamento individualizado de novos colaboradores no desenvolvimento técnico e cultural</span></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 13 — CLIENTES (full width) -->
+        <div class="card" id="s13">
+            <div class="card-header">
+                <span class="card-num">13</span>
+                <span class="card-title">Relacionamento com Clientes</span>
+            </div>
+            <div class="card-body">
+                <div class="card-body-inner">
+                    <ul class="process-list">
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Migrações de clientes</span><span class="item-desc">Planejamento e execução de migrações de ambiente com mínimo de impacto operacional</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Visitas ao cliente</span><span class="item-desc">Atendimento presencial para suporte, levantamento e acompanhamento técnico</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Suporte ao cliente</span><span class="item-desc">Atendimento de demandas técnicas e operacionais dos clientes</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Suporte via ChatCorp</span><span class="item-desc">Atendimento de chamados e incidentes dos clientes pela plataforma ChatCorp</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Suporte via Teams</span><span class="item-desc">Atendimento técnico e operacional de clientes via Microsoft Teams</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Suporte via WhatsApp</span><span class="item-desc">Atendimento rápido e comunicação direta com clientes via WhatsApp</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Escala de atendimento a partir das 6h</span><span class="item-desc">Cobertura operacional matinal estruturada para garantir disponibilidade no início do expediente</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Atendimentos emergenciais fora de horário</span><span class="item-desc">Resposta a incidentes críticos fora do expediente padrão para minimizar impacto aos clientes</span></span></li>
+                        <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Atualizações recorrentes nos finais de semana</span><span class="item-desc">Execução de atualizações em horário de baixo impacto para adequação ao fuso horário dos clientes internacionais</span></span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 14 + 15 — SEGURANÇA  /  PROJETOS (dois por linha) -->
+        <div class="grid-2">
+            <div class="card compact card-dark" id="s14">
+                <div class="card-header">
+                    <span class="card-num">14</span>
+                    <span class="card-title">Segurança e Compliance</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <ul class="process-list">
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Boas práticas de segurança (VaultWarden)</span><span class="item-desc">Aplicação de hardening e gestão centralizada de credenciais com VaultWarden</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Políticas de segurança e compliance</span><span class="item-desc">Implementação de políticas de acesso, auditoria e conformidade nos ambientes</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Firewall PFSense</span><span class="item-desc">Implementação e configuração do novo firewall PFSense para controle avançado de tráfego</span></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card compact" id="s15">
+                <div class="card-header">
+                    <span class="card-num">15</span>
+                    <span class="card-title">Projetos e Melhorias</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <ul class="process-list">
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Projetos de melhoria de infraestrutura</span><span class="item-desc">Iniciativas estruturadas de evolução do atendimento e da plataforma de infraestrutura</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Plano de ação para SLAs</span><span class="item-desc">Reformulação estruturada dos fluxos de atendimento para garantir cumprimento de SLAs</span></span></li>
+                            <li><span class="dot"></span><span class="item-wrap"><span class="item-name">Otimização de sistemas</span><span class="item-desc">Identificação e execução de melhorias de performance e eficiência nos ambientes gerenciados</span></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards    = document.querySelectorAll('.card');
+            const navLinks = document.querySelectorAll('.site-nav a');
+
+            // Scroll reveal
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const card  = entry.target;
+                        const index = [...cards].indexOf(card);
+                        const delay = (index % 4) * 80;
+                        setTimeout(() => card.classList.add('is-visible'), delay);
+                        revealObserver.unobserve(card);
+                    }
+                });
+            }, { threshold: 0.08 });
+
+            cards.forEach(card => revealObserver.observe(card));
+
+            // Active nav highlight
+            const navObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.id;
+                        navLinks.forEach(a => {
+                            a.classList.toggle('is-active', a.getAttribute('href') === `#${id}`);
+                        });
+                    }
+                });
+            }, { threshold: 0.3, rootMargin: '-5% 0px -55% 0px' });
+
+            document.querySelectorAll('.card[id]').forEach(card => navObserver.observe(card));
+        });
+    </script>
+</body>
+</html>
