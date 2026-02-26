@@ -439,8 +439,27 @@
         @media print {
             body { background: white; }
             .content { padding: 20px 30px; }
-            .card { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
-            .cover { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+            .site-nav { display: none; }
+            .card {
+                opacity: 1 !important;
+                transform: none !important;
+                box-shadow: none;
+                border: 1px solid #ddd;
+                break-inside: avoid;
+            }
+            .cover {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+                animation: none !important;
+            }
+            .cover-eyebrow,
+            .cover h1,
+            .cover-line,
+            .cover-company {
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+            }
         }
 
         @media (max-width: 720px) {

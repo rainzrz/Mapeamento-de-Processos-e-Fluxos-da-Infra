@@ -7,7 +7,17 @@
       "Bash(python -m http.server 3000)",
       "Bash(npx --yes serve -l 3000)",
       "Bash(npx serve -l tcp://0.0.0.0:3000)",
-      "Bash(npx --yes http-server -a 0.0.0.0 -p 49200)"
+      "Bash(npx --yes http-server -a 0.0.0.0 -p 49200)",
+      "Bash(npx http-server -a 0.0.0.0 -p 49200)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill /PID 45228 /F)",
+      "Bash(cmd.exe /c \"taskkill /PID 45228 /F\")",
+      "Bash(npx http-server -a 0.0.0.0 -p 49300)",
+      "Bash(cmd.exe /c \"where chrome\")",
+      "Bash(cmd.exe /c \"dir \"\"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\"\" 2>&1\")",
+      "Bash(node -e \":*)",
+      "Bash(git add .claude/settings.local.json index.html mapeamento.md)",
+      "Bash(git commit:*)"
     ]
   }
 }
