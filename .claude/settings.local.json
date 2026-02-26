@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node --version)",
+      "Bash(ipconfig)",
+      "Bash(python -m http.server 8080)",
+      "Bash(python -m http.server 3000)",
+      "Bash(npx --yes serve -l 3000)",
+      "Bash(npx serve -l tcp://0.0.0.0:3000)",
+      "Bash(npx --yes http-server -a 0.0.0.0 -p 49200)"
+    ]
+  }
+}
